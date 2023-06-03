@@ -6,7 +6,7 @@ import sys
 API_KEY = "OPENWEATHERMAP API KEY"
 
 def get_time(timestamp):
-    datetime_obj = datetime.datetime.fromtimestamp(timestamp)
+    datetime_obj = datetime.datetime.fromtimestamp(int(timestamp))
     human_time = datetime_obj.strftime('%H:%M')
     return human_time
 
@@ -36,18 +36,22 @@ def get_weather(postal_code):
         print("Failed to fetch weather data.")
         return
 
+    name = raw_weather_data["name"]
+    wind_speed = raw_weather_data["wind"]["speed"]
+    wind_deg = (str(raw_weather_data["wind"]["deg"]) + "°")
     sunrise = get_time(raw_weather_data["sys"]["sunrise"])
     sunset = get_time(raw_weather_data["sys"]["sunset"])
     feelslike = round(raw_weather_data["main"]["feels_like"] - 273.15)
     visibility = (str(int(raw_weather_data["visibility"]/100)) + "%")
     humidity = raw_weather_data["main"]["humidity"]
-    pressure = raw_weather_data["main"]["pressure"]
+    pressure = (str(raw_weather_data["main"]["pressure"]) + " mb")
     weather_main = raw_weather_data["weather"][0]["main"]
     weather_description = (raw_weather_data["weather"][0]["description"]).title()
     temperature = round(raw_weather_data["main"]["temp"] - 273.15)
 
+    print("City Name:", name)
     print("Weather:", weather_main)
-    print("Description", weather_description)
+    print("Description:", weather_description)
     print("Temperature: {}°C".format(temperature))
     print("Feels Like: {}°C".format(feelslike))
     print("Humidity:", humidity)
@@ -55,6 +59,8 @@ def get_weather(postal_code):
     print("Visibility:", visibility)
     print("Sunrise:", sunrise)
     print("Sunset:", sunset)
+    print("Wind Speed", wind_speed)
+    print("Wind Degree", wind_deg)
 
 postal_code = int(sys.argv[1])
 get_weather(postal_code)
